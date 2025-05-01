@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>backend</artifactId>
+	<artifactId>todo</artifactId> <!-- jar file name -->
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
-	<description>Demo project for Spring Boot</description>
+	<name>Todo Backend Service</name> <!-- understandable name for human -->
+	<description>Todo project for Spring Boot</description>
 	<url/>
 	<licenses>
 		<license/>

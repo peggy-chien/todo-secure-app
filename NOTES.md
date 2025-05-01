@@ -249,3 +249,68 @@ This approach is semantically more precise but also requires more route definiti
 | @PutMapping | Handles full record updates |
 | @DeleteMapping | Handles deletion requests |
 
+# Database (PostgreSQL)
+
+Since we've used Spring Data JPA with Hibernate, we don't need to manually create database tables. The framework automatically:
+
+1. Reads our `@Entity` annotated classes (like `Todo.java`)
+2. Creates corresponding database tables on application startup
+3. Manages table schema based on our entity definitions
+4. Handles database migrations when entity classes change
+
+This approach (known as "code-first" or "entity-first") eliminates the need to write SQL DDL statements manually. Hibernate translates our Java class structure into the appropriate database schema, ensuring our database tables always match our domain models.
+
+**Benefits:**
+
+- Reduces boilerplate SQL code
+- Ensures consistency between code and database
+- Simplifies development workflow
+- Provides portability across different database systems
+
+## What is application.properties?
+- It is the main configuration file in a Spring Boot project.
+- Located under: src/main/resources/application.properties (you can use .yml file as well)
+- Used to define application-level settings such as:
+  - Database connection
+  - JPA and Hibernate behavior
+  - Server port
+  - Logging, security, and more
+
+Spring Boot will automatically load this file at startup.
+
+### Common Properties You Need to Set (for PostgreSQL + JPA)
+
+```
+# === Database ===
+spring.datasource.url=jdbc:postgresql://db:5432/tododb
+spring.datasource.username=user
+spring.datasource.password=password
+
+# === JPA / Hibernate ===
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+# === Optional: Change Server Port ===
+server.port=8080
+```
+
+#### Property Descriptions
+
+| Property | Description |
+|----------|-------------|
+| spring.datasource.url | JDBC URL to connect to your database (e.g., PostgreSQL) |
+| spring.datasource.username/password | Database credentials |
+| spring.jpa.hibernate.ddl-auto | How Hibernate handles schema: update, create, validate, none |
+| spring.jpa.show-sql | Print SQL statements to the console |
+| spring.jpa.properties.hibernate.format_sql | Format printed SQL for readability |
+| server.port | (Optional) Set the HTTP port for the application |
+
+### Why Is This File Empty by Default?
+
+Spring Boot follows “Convention over Configuration”:
+- If you don’t define these properties, Spring Boot applies reasonable defaults.
+- Example: if no DB is configured, it uses an in-memory H2 database by default.
+
+However:
+- Once you connect to a real database like PostgreSQL or MySQL, you must provide your own configuration.
