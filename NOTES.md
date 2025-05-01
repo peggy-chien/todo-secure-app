@@ -122,3 +122,41 @@ Use @Column only if you need fine-grained control, such as:
 | @PrePersist | Sets default values before saving |
 | @Column | (Optional) Add DB-level constraints/settings |
 | Getters/Setters | Enables JSON mapping and ORM functionality |
+
+---
+
+## Repository
+
+The repository layer handles all interactions between the application and the database. In Spring Boot, we can use Spring Data JPA to avoid writing boilerplate SQL or DAO logic.
+
+By extending a repository interface, Spring will automatically generate common data access methods such as:
+- findAll()
+- findById(id)
+- save(entity)
+- deleteById(id)
+
+### Thoughts Before Coding
+
+#### Basic Requirements
+
+A Todo repository should support:
+
+- Retrieving all todos
+- Finding a todo by ID
+- Saving a new todo
+- Updating an existing todo
+- Deleting a todo
+
+These are already covered by JpaRepository.
+
+### Repository Design Breakdown
+
+- `JpaRepository<Todo, Long>`: Indicates this repository works with the Todo entity and its primary key is of type Long.
+- `@Repository	(Optional)`:  Tells Spring this is a bean for data access; mostly used for clarity, as Spring Boot auto-detects interfaces.
+
+#### Why This Design?
+
+- No need to write CRUD logic manually.
+- Clean separation of concerns: controller → service → repository → DB.
+- Easily extendable for pagination, sorting, and custom queries.
+- Fully integrates with Spring Boot’s dependency injection.
