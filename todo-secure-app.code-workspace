@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"path": "frontend"
+		},
+		{
+			"path": "backend"
+		},
+		{
+			"path": "db"
+		}
+	],
+	"settings": {
+    "typescript.tsdk": "frontend/.yarn/sdks/typescript/lib",
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    "eslint.nodePath": "frontend/.yarn/sdks",
+    "search.exclude": {
+      "**/.yarn": true,
+      "**/.pnp.*": true
+    }
+	}
+}

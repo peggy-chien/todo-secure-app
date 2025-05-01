@@ -1,5 +1,22 @@
 # React + TypeScript + Vite
 
+## Setup Instructions
+
+1. Open the entire `todo-secure-app` repository in VS Code using workspace mode
+2. Navigate to the `frontend` directory
+3. Run the following commands to set up the development environment:
+
+```bash
+# Enable Corepack if you haven't already
+corepack enable
+
+# Install Yarn if not already installed
+corepack prepare yarn@stable --activate
+
+# Run the VS Code setup script
+yarn setup:vscode
+```
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
