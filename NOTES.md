@@ -160,3 +160,92 @@ These are already covered by JpaRepository.
 - Clean separation of concerns: controller → service → repository → DB.
 - Easily extendable for pagination, sorting, and custom queries.
 - Fully integrates with Spring Boot’s dependency injection.
+
+---
+
+## Controller
+
+The controller acts as the entry point for HTTP requests. It connects the client (e.g., React frontend) with the service or repository layers and exposes business functionality as RESTful endpoints.
+
+### Thoughts Before Coding
+
+For a typical Todo application, the controller should handle:
+
+| Action | HTTP Method | Endpoint | Description |
+|--------|-------------|----------|-------------|
+| Get all todos | GET | /api/todos | Retrieve all todo items |
+| Create a new todo | POST | /api/todos | Add a new todo |
+| Delete a todo | DELETE | /api/todos/{id} | Delete a specific todo by ID |
+| Update a todo | PUT | /api/todos/{id} | Replace the entire todo (title & completed) |
+
+### Repository Design Breakdown
+
+#### Get all todos
+
+- use `@GetMapping` to map HTTP GET requests to the method
+- return `List<Todo>` to send all todos as a JSON array
+- call `todoRepository.findAll()` to retrieve all todos from the database
+
+#### Create a new todo
+
+- use `@PostMapping` to map HTTP POST requests to the method
+- use `@RequestBody` to deserialize the JSON request body into a Todo object
+- call `todoRepository.save(todo)` to persist the new todo
+- return the saved Todo with its generated ID
+
+#### Delete a todo
+
+- use `@DeleteMapping("/{id}")` to map HTTP DELETE requests with an ID parameter
+- use `@PathVariable` to extract the ID from the URL
+- call `todoRepository.deleteById(id)` to remove the todo from the database
+
+#### Update a todo
+
+- use `@PutMapping("/{id}")` to map HTTP PUT requests with an ID parameter
+- use `@PathVariable` to extract the ID from the URL
+- use `@RequestBody` to deserialize the updated Todo object
+- find the existing todo by ID or throw an exception if not found
+- update the todo's properties with the new values
+- call `todoRepository.save(todo)` to persist the changes
+
+### Why Use PUT Instead of PATCH?
+
+- The Todo entity is simple and flat.
+- Frontend usually sends the full object (title and completed) when submitting forms.
+- It simplifies backend logic — no need to check which fields are present.
+- Ideal for full record updates.
+
+### When to Use PATCH Instead:
+
+- For partial field updates which has a complex structure (e.g. nested JSON).
+- Or a field which might toggle (switch ON and OFF) frequently.
+- If the frontend sends only the fields that changed.
+- For advanced REST design where minimal updates are preferred.
+
+#### Example of PATCH (Advanced Use)
+
+```java
+@PatchMapping("/{id}/toggle")
+public Todo toggleCompleted(@PathVariable Long id) {
+    Todo todo = todoRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Todo not found with id: " + id));
+
+    todo.setCompleted(!todo.getCompleted());
+    return todoRepository.save(todo);
+}
+```
+
+This approach is semantically more precise but also requires more route definitions and logic.
+
+### Summary Table
+
+| Annotation | Purpose |
+|------------|---------|
+| @RestController | Declares a RESTful API controller |
+| @RequestMapping | Base path for all routes in this controller |
+| @CrossOrigin | Enables CORS for frontend interaction |
+| @GetMapping | Handles GET requests |
+| @PostMapping | Handles POST requests |
+| @PutMapping | Handles full record updates |
+| @DeleteMapping | Handles deletion requests |
+
