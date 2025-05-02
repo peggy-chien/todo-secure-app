@@ -3,11 +3,12 @@ package com.example.backend.controller;
 import com.example.backend.model.Todo;
 import com.example.backend.repository.TodoRepository;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Pageable;
 
 @RestController
 @RequestMapping("/api/todos")
@@ -18,8 +19,8 @@ public class TodoController {
 
   // get all todos
   @GetMapping
-  public List<Todo> getAllTodos() {
-    return todoRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+  public Page<Todo> getAllTodos(@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    return todoRepository.findAll(pageable);
   }
 
   // create a new todo
