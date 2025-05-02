@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import './TodoList.scss';
-import { getTodos, createTodo, updateTodo, deleteTodo } from '../services/todoService';
-import { TodoItem } from './TodoItem';
-import { Todo } from '../models/Todo.model';
-import { Page } from '../models/Page.model';
+import { getTodos, createTodo, updateTodo, deleteTodo } from '../../services/todoService';
+import { TodoItem } from '../TodoItem';
+import { Todo } from '../../models/Todo.model';
+import { Page } from '../../models/Page.model';
 
 export const TodoList = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
