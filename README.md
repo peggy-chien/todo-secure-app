@@ -72,6 +72,8 @@ Your production version will also run on:
 
 ```bash
 make up       # Start with existing .env
+make pause    # Pause tha containers
+make unpause  # Unpause the containsers
 make down     # Stop and remove containers
 make logs     # Tail container logs
 make ps       # Show running services

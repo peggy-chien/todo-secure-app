@@ -13,6 +13,12 @@ prod:
 up:
 	docker-compose up --build
 
+pause:
+	docker-compose pause
+
+unpause:
+	docker-compose unpause
+
 down:
 	docker-compose down
 
