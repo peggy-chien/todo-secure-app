@@ -39,7 +39,6 @@ public class TodoController {
     Todo todo = todoRepository.findById(id)
       .orElseThrow(() -> new RuntimeException("Todo not found with id: " + id));
 
-    todo.setTitle(todoDetails.getTitle());
     todo.setCompleted(todoDetails.getCompleted());
 
     return todoRepository.save(todo);
