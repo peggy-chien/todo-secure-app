@@ -1,51 +1,56 @@
+@use '../styles/variables' as v;
+@use '../styles/mixins' as m;
+@use 'sass:color';
+
 .todo-container {
   max-width: 600px;
-  margin: 2rem auto;
-  padding: 2rem;
+  margin: 0 auto;
+  padding: v.$spacing-md;
+  font-family: v.$font-family-base;
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+  border-radius: v.$border-radius-lg;
+  @include m.shadow-md;
 
-.todo-container h1 {
-  text-align: center;
-  color: #333;
-  margin-bottom: 2rem;
+  h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: v.$spacing-lg;
+  }
 }
 
 .todo-input-container {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  @include m.flex-between;
+  gap: v.$spacing-sm;
+  margin-bottom: v.$spacing-lg;
 }
 
 .todo-input {
   flex: 1;
-  padding: 0.75rem 1rem;
+  padding: v.$spacing-xs v.$spacing-sm;
   border: 2px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border-color 0.2s;
-}
+  border-radius: v.$border-radius-md;
+  font-size: v.$font-size-base;
+  @include m.transition(border-color);
 
-.todo-input:focus {
-  outline: none;
-  border-color: #3b82f6;
+  &:focus {
+    outline: none;
+    border-color: v.$primary-color;
+  }
 }
 
 .add-button {
-  padding: 0.75rem 1.5rem;
-  background-color: #3b82f6;
+  padding: v.$spacing-xs v.$spacing-md;
+  background-color: v.$primary-color;
   color: white;
   border: none;
-  border-radius: 8px;
-  font-size: 1rem;
+  border-radius: v.$border-radius-md;
+  font-size: v.$font-size-base;
   cursor: pointer;
-  transition: background-color 0.2s;
-}
+  @include m.transition(background-color);
 
-.add-button:hover {
-  background-color: #2563eb;
+  &:hover {
+    background-color: color.adjust(v.$primary-color, $lightness: -10%);
+  }
 }
 
 .todo-list {
@@ -54,49 +59,11 @@
   margin: 0;
 }
 
-.todo-item {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  background: #f8fafc;
-  border-radius: 8px;
-  margin-bottom: 0.5rem;
-  transition: background-color 0.2s;
-}
-
-.todo-item:hover {
-  background: #f1f5f9;
-}
-
-.todo-checkbox {
-  margin-right: 1rem;
-  width: 1.25rem;
-  height: 1.25rem;
-  cursor: pointer;
-}
-
-.todo-text {
-  flex: 1;
-  font-size: 1rem;
-  color: #334155;
-}
-
-.completed .todo-text {
-  text-decoration: line-through;
-  color: #94a3b8;
-}
-
-.delete-button {
-  background: none;
-  border: none;
-  color: #ef4444;
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0.25rem;
-  line-height: 1;
-  transition: color 0.2s;
-}
-
-.delete-button:hover {
-  color: #dc2626;
+.error-message {
+  color: v.$danger-color;
+  background-color: color.adjust(v.$danger-color, $lightness: 38%);
+  border: 1px solid color.adjust(v.$danger-color, $lightness: 32%);
+  padding: v.$spacing-sm;
+  margin-bottom: v.$spacing-sm;
+  border-radius: v.$border-radius-sm;
 } 

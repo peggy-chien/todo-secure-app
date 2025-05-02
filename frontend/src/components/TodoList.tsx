@@ -1,36 +1,87 @@
-import { useState } from 'react';
-import './TodoList.css';
-
-interface Todo {
-  id: number;
-  text: string;
-  completed: boolean;
-}
+import { useState, useEffect } from 'react';
+import './TodoList.scss';
+import { Todo, getTodos, createTodo, updateTodo, deleteTodo } from '../services/todoService';
+import { TodoItem } from './TodoItem';
 
 export const TodoList = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [newTodo, setNewTodo] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const addTodo = () => {
+  useEffect(() => {
+    const fetchTodos = async () => {
+      try {
+        const fetchedTodos = await getTodos();
+        setTodos(fetchedTodos);
+        setError(null);
+      } catch (err) {
+        setError('Failed to fetch todos');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTodos();
+  }, []);
+
+  const addTodo = async () => {
     if (newTodo.trim()) {
-      setTodos([...todos, { id: Date.now(), text: newTodo, completed: false }]);
-      setNewTodo('');
+      try {
+        const createdTodo = await createTodo(newTodo);
+        setTodos([...todos, createdTodo]);
+        setNewTodo('');
+        setError(null);
+      } catch (err) {
+        setError('Failed to create todo');
+        console.error(err);
+      }
     }
   };
 
-  const toggleTodo = (id: number) => {
-    setTodos(todos.map(todo =>
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    ));
+  const toggleTodo = async (id: number) => {
+    const todo = todos.find(t => t.id === id);
+    if (todo) {
+      try {
+        const updatedTodo = await updateTodo(id, { completed: !todo.completed });
+        setTodos(todos.map(t => t.id === id ? updatedTodo : t));
+        setError(null);
+      } catch (err) {
+        setError('Failed to update todo');
+        console.error(err);
+      }
+    }
   };
 
-  const deleteTodo = (id: number) => {
-    setTodos(todos.filter(todo => todo.id !== id));
+  const handleDeleteTodo = async (id: number) => {
+    try {
+      await deleteTodo(id);
+      setTodos(todos.filter(todo => todo.id !== id));
+      setError(null);
+    } catch (err) {
+      setError('Failed to delete todo');
+      console.error(err);
+    }
   };
+
+  if (loading) {
+    return <div className="todo-container">Loading...</div>;
+  }
+
+  // Sort todos: incomplete first, then by createdAt (newest first)
+  const sortedTodos = [...todos].sort((a, b) => {
+    if (a.completed !== b.completed) {
+      return a.completed ? 1 : -1; // incomplete first
+    }
+    // Newest first
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
 
   return (
     <div className="todo-container">
       <h1>Todo List</h1>
+      {error && <div className="error-message">{error}</div>}
       <div className="todo-input-container">
         <input
           type="text"
@@ -45,22 +96,13 @@ export const TodoList = () => {
         </button>
       </div>
       <ul className="todo-list">
-        {todos.map(todo => (
-          <li key={todo.id} className={`todo-item ${todo.completed ? 'completed' : ''}`}>
-            <input
-              type="checkbox"
-              checked={todo.completed}
-              onChange={() => toggleTodo(todo.id)}
-              className="todo-checkbox"
-            />
-            <span className="todo-text">{todo.text}</span>
-            <button
-              onClick={() => deleteTodo(todo.id)}
-              className="delete-button"
-            >
-              ×
-            </button>
-          </li>
+        {sortedTodos.map(todo => (
+          <TodoItem
+            key={todo.id}
+            todo={todo}
+            onToggle={toggleTodo}
+            onDelete={handleDeleteTodo}
+          />
         ))}
       </ul>
     </div>

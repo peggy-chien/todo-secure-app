@@ -1,0 +1,49 @@
+@use '../styles/variables' as v;
+@use '../styles/mixins' as m;
+@use 'sass:color';
+
+.todo-item {
+  @include m.flex-between;
+  padding: v.$spacing-sm;
+  background: #f8fafc;
+  border-radius: v.$border-radius-md;
+  margin-bottom: v.$spacing-xs;
+  @include m.transition(background-color);
+
+  &:hover {
+    background: #f1f5f9;
+  }
+}
+
+.todo-checkbox {
+  margin-right: v.$spacing-sm;
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+}
+
+.todo-text {
+  flex: 1;
+  font-size: v.$font-size-base;
+  color: #334155;
+}
+
+.completed .todo-text {
+  text-decoration: line-through;
+  color: #94a3b8;
+}
+
+.delete-button {
+  background: none;
+  border: none;
+  color: v.$danger-color;
+  font-size: v.$font-size-base * 1.5;
+  cursor: pointer;
+  padding: v.$spacing-xs;
+  line-height: 1;
+  @include m.transition(color);
+
+  &:hover {
+    color: color.adjust(v.$danger-color, $lightness: -10%);
+  }
+} 
