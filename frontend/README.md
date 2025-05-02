@@ -17,6 +17,22 @@ corepack prepare yarn@stable --activate
 yarn setup:vscode
 ```
 
+## Troubleshooting
+
+### VSCode Setup Issues
+
+If you encounter errors during the VSCode setup (particularly with ESLint), try the following steps:
+
+```bash
+# Clean the Yarn cache and reinstall dependencies
+yarn cache clean && yarn install
+
+# Run the VSCode setup again
+yarn setup:vscode
+```
+
+This should resolve any issues with missing packages or SDK generation.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
