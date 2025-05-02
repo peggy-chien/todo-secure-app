@@ -1,0 +1,64 @@
+@use 'variables' as v;
+
+// Flexbox mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Media queries
+@mixin sm {
+  @media (min-width: v.$breakpoint-sm) {
+    @content;
+  }
+}
+
+@mixin md {
+  @media (min-width: v.$breakpoint-md) {
+    @content;
+  }
+}
+
+@mixin lg {
+  @media (min-width: v.$breakpoint-lg) {
+    @content;
+  }
+}
+
+@mixin xl {
+  @media (min-width: v.$breakpoint-xl) {
+    @content;
+  }
+}
+
+// Typography
+@mixin text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Transitions
+@mixin transition($property: all) {
+  transition: $property v.$transition-base;
+}
+
+// Box shadow
+@mixin shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+@mixin shadow-md {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+@mixin shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+} 
