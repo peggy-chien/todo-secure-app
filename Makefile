@@ -23,3 +23,6 @@ ps:
 	docker-compose ps
 
 restart: down up
+
+psql:
+	docker exec -it postgres psql -U user -d tododb
