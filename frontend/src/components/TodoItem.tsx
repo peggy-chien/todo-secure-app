@@ -1,5 +1,5 @@
 import React from 'react';
-import { Todo } from '../services/todoService';
+import { Todo } from '../models/Todo.model';
 import './TodoItem.scss';
 
 interface TodoItemProps {

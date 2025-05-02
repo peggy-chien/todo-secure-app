@@ -1,15 +1,10 @@
 import api from '../api';
+import { Todo } from '../models/Todo.model';
+import { Page } from '../models/Page.model';
 
-export interface Todo {
-  id: number;
-  title: string;
-  completed: boolean;
-  createdAt: Date;
-}
-
-export const getTodos = async (): Promise<Todo[]> => {
+export const getTodos = async (page = 0, size = 10): Promise<Page<Todo>> => {
   try {
-    const response = await api.get('/todos');
+    const response = await api.get('/todos', { params: { page, size } });
     return response.data;
   } catch (error) {
     console.error('Error fetching todos:', error);

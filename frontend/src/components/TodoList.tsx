@@ -1,19 +1,25 @@
 import { useState, useEffect } from 'react';
 import './TodoList.scss';
-import { Todo, getTodos, createTodo, updateTodo, deleteTodo } from '../services/todoService';
+import { getTodos, createTodo, updateTodo, deleteTodo } from '../services/todoService';
 import { TodoItem } from './TodoItem';
+import { Todo } from '../models/Todo.model';
+import { Page } from '../models/Page.model';
 
 export const TodoList = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [newTodo, setNewTodo] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     const fetchTodos = async () => {
+      setLoading(true);
       try {
-        const fetchedTodos = await getTodos();
-        setTodos(fetchedTodos);
+        const todoPage: Page<Todo> = await getTodos(page, 10);
+        setTodos(todoPage.content);
+        setTotalPages(todoPage.totalPages);
         setError(null);
       } catch (err) {
         setError('Failed to fetch todos');
@@ -24,13 +30,13 @@ export const TodoList = () => {
     };
 
     fetchTodos();
-  }, []);
+  }, [page]);
 
   const addTodo = async () => {
     if (newTodo.trim()) {
       try {
         const createdTodo = await createTodo(newTodo);
-        setTodos([...todos, createdTodo]);
+        setTodos([createdTodo, ...todos]);
         setNewTodo('');
         setError(null);
       } catch (err) {
@@ -65,18 +71,12 @@ export const TodoList = () => {
     }
   };
 
+  const handlePrevPage = () => setPage((p) => Math.max(0, p - 1));
+  const handleNextPage = () => setPage((p) => Math.min(totalPages - 1, p + 1));
+
   if (loading) {
     return <div className="todo-container">Loading...</div>;
   }
-
-  // Sort todos: incomplete first, then by createdAt (newest first)
-  const sortedTodos = [...todos].sort((a, b) => {
-    if (a.completed !== b.completed) {
-      return a.completed ? 1 : -1; // incomplete first
-    }
-    // Newest first
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  });
 
   return (
     <div className="todo-container">
@@ -96,7 +96,7 @@ export const TodoList = () => {
         </button>
       </div>
       <ul className="todo-list">
-        {sortedTodos.map(todo => (
+        {todos.map(todo => (
           <TodoItem
             key={todo.id}
             todo={todo}
@@ -105,6 +105,11 @@ export const TodoList = () => {
           />
         ))}
       </ul>
+      <div className="pagination-controls">
+        <button onClick={handlePrevPage} disabled={page === 0}>Previous</button>
+        <span>Page {page + 1} of {totalPages}</span>
+        <button onClick={handleNextPage} disabled={page + 1 >= totalPages}>Next</button>
+      </div>
     </div>
   );
 }; 
