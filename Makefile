@@ -1,6 +1,6 @@
 ENV_FILE=.env
 
-.PHONY: dev prod up down logs ps restart
+.PHONY: dev prod up down logs ps restart psql
 
 dev:
 	cp .env.development $(ENV_FILE)
