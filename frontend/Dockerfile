@@ -1,22 +1,21 @@
 # --------- Builder Stage ---------
 FROM node:18-alpine AS builder
 
-ARG YARN_VERSION
+# Make sure we have the same pnpm version in the package.json file
+ARG PNPM_VERSION=10.10.0
 
 WORKDIR /app
-COPY package.json yarn.lock ./
+COPY package.json pnpm-lock.yaml ./
 
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
 
-RUN corepack enable \
-  && corepack prepare yarn@${YARN_VERSION} --activate \
-  && echo "nodeLinker: node-modules" > .yarnrc.yml \
-  && yarn install --immutable
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@${PNPM_VERSION} --activate
 
 COPY . .
-RUN yarn install --check-cache \
-  && yarn build
+RUN pnpm install --frozen-lockfile \
+  && pnpm build
 
 # --------- Runtime Stage ---------
 FROM nginx:alpine AS runner
