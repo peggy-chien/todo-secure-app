@@ -1,14 +1,4 @@
-@use 'styles/variables' as v;
-@use 'styles/mixins' as m;
-
-#root {
-  margin-left: auto;
-  margin-right: auto;
-}
-
 .app {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: v.$spacing-lg;
-  // @include m.flex-center;
+  // background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  // padding: 2rem;
 }
